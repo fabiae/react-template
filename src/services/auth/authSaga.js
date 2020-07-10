@@ -47,6 +47,11 @@ function* signUp(data){
     }
 }
 
+function* logOut(){
+    token.removeToken()
+}
+
+
 function* sendCode(data){
     const { email } = data.payload
     const response = yield Api.get('/auth/send-code', email )
@@ -85,6 +90,7 @@ function* actionWatcher(){
     yield takeLatest(authActions.signIn, signIn)
     yield takeLatest(authActions.userAvailable, userAvailable)
     yield takeLatest(authActions.signUp, signUp)
+    yield takeLatest(authActions.logOut, logOut)
     yield takeLatest(authActions.sendCode, sendCode)
     yield takeLatest(authActions.validateCode, validateCode)
     yield takeLatest(authActions.newPassword, newPassword)

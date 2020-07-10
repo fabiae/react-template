@@ -19,6 +19,7 @@ const initialState = {
         errorValidateCode: false,
         errorNewPassword: false
     },
+    message: {},
     recover: {
         step: 0
     }
@@ -48,7 +49,8 @@ const authReducer = handleActions({
             return {
                 ...state,
                 loading: {...state.loading, loadingSignin: false },
-                error: {...state.error, errorSignin: true, message }
+                error: {...state.error, errorSignin: true },
+                message: {...state.message, messageSignin: message }
             }
         }
     },
@@ -91,7 +93,8 @@ const authReducer = handleActions({
             return {
                 ...state, 
                 loading: {...state.loading, loadignSignup: false },
-                error: {...state.error, errorSignup: true, message }
+                error: {...state.error, errorSignup: true },
+                message: {...state.message, messageSignup: message }
             }
         }
     },
@@ -119,10 +122,12 @@ const authReducer = handleActions({
             return {
                 ...state,
                 loading: {...state.loading, loadingSendCode: false },
-                error: {...state.error, errorSendCode: true, message }
+                error: {...state.error, errorSendCode: true },
+                message: {...state.message, messageSendCode: message }
             }
         }
     },
+
     VALIDATE_CODE: (state, action) => {
         return {
             ...state,
@@ -144,10 +149,12 @@ const authReducer = handleActions({
             return {
                 ...state,
                 loading: {...state.loading, loadingValidateCode: false },
-                error: {...state.error, errorValidateCode: true, message}
+                error: {...state.error, errorValidateCode: true },
+                message: {...state.message, messageValidatCode: message }
             }
         }
     },
+
     NEW_PASSWORD: (state, action) => {
         return {
             ...state,
@@ -169,8 +176,30 @@ const authReducer = handleActions({
             return {
                 ...state,
                 loading: {...state.loading, loadingNewPassword: false },
-                error: {...state.error, errorNewPassword: true, message }
+                error: {...state.error, errorNewPassword: true },
+                message: {...state.message, messageNewPassword: message }
             }
+        }
+    },
+
+    LOG_OUT: (state, action) => {
+        return {
+            ...state,
+            authenticated: false
+        }
+    },
+
+    RESET_STEPS: (state, action) => {
+        return {
+            ...state,
+            recover: { step: 0 }
+        }
+    },
+    RESET_ERROR: (state, action) => {
+        return {
+            ...state,
+            error: { },
+            message: { }
         }
     }
 }, initialState)

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Form, Input, Button, Spin, Alert } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
@@ -10,16 +10,23 @@ import authActions from '../../../services/auth/authActions'
 const SignIn = props => {
 
     const dispatch = useDispatch()
-    const { loading: { loadingSignin }, error: { errorSignin, message }} = useSelector(state => state.auth)
+    const { loading: { loadingSignin }, error: { errorSignin }, message: { messageSignin } } = useSelector(state => state.auth)
     const { t } = useTranslation()
     const [form] = Form.useForm()
-    const { signIn } = authActions
+    const { signIn, resetError } = authActions
 
     const onFinish = () => {
         form.validateFields().then((values) => {
             dispatch(signIn(values))
         })
     }
+
+
+    useEffect(() => {
+        return () => {
+            dispatch(resetError())
+        }
+    }, [])
 
     return (
         <div style={{ padding: '80px 50px', width: '450px', display: 'inline-block' }}>
@@ -32,9 +39,9 @@ const SignIn = props => {
                 <Form.Item
                     name="username"
                     rules={[
-                        { 
-                            required: true, 
-                            message: t('usernameRule')
+                        {
+                            required: true,
+                            message: t('usernameRequired')
                         }
                     ]}>
                     <Input prefix={<UserOutlined />} placeholder={t('username')} />
@@ -43,34 +50,33 @@ const SignIn = props => {
                 <Form.Item
                     name="password"
                     rules={[
-                        { 
-                            required: true, 
-                            message: t('passwordRule') 
+                        {
+                            required: true,
+                            message: t('passwordRequired')
                         }
                     ]}>
                     <Input prefix={<LockOutlined />} type="password" placeholder={t('password')} />
                 </Form.Item>
 
                 <Spin spinning={loadingSignin}>{
-                    errorSignin ? 
-                    <Alert
-                        type="error"
-                        showIcon
-                        closable
-                        message={message}/> : null
+                    errorSignin ?
+                        <Alert
+                            className="alert"
+                            type="error"
+                            showIcon
+                            closable
+                            message={messageSignin} /> : null
                 }</Spin>
 
-                <Form.Item>
                 <Link to="/recover-pass">{t('forgotPassword')}</Link>
-                </Form.Item>
 
                 <Form.Item>
                     <Button block type="primary" htmlType="submit">
-                        {t('signinButton')}
+                        {t('signin')}
                     </Button>
-                {t('or')} <Link to="/signup">{t('registerNow')}</Link>
+                    {t('or')} <Link to="/signup">{t('registerNow')}</Link>
                 </Form.Item>
-                
+
             </Form>
         </div>
     )
